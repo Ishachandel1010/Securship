@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # SecureShip — a Jenkins CI/CD pipeline with a DevSecOps twist
 
 A tiny Flask URL-shortener API, wrapped in a Jenkins pipeline that
@@ -138,3 +139,7 @@ pass.
    Actions.
 5. Move credentials/config to a `Jenkinsfile` parameterized build so
    the same pipeline can deploy to "staging" vs "prod" targets.
+=======
+# Securship
+This is for Jenkins with CICD pipeline project
+>>>>>>> 9e34216242a6ec943b1e4295dc8e95edd29bb947
