@@ -9,9 +9,13 @@ you spend your learning time on Jenkins concepts, not Flask concepts.
 
 import hashlib
 import os
-from flask import Flask, request, jsonify, redirect
+from flask import Flask, request, jsonify, redirect, render_template
 
 app = Flask(__name__)
+
+@app.route("/", methods=["GET"])
+def home():
+    return render_template("index.html")
 
 # In-memory store: { short_code: original_url }
 # NOTE: this resets every time the container restarts. That's fine for

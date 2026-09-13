@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SecureShip - URL Shortener</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 600px;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .logo span {
+            color: #2563eb;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        button:disabled {
+            background: #999;
+            cursor: not-allowed;
+        }
+
+        #result {
+            margin-top: 25px;
+            padding: 15px;
+            background: #f0fdf4;
+            border-radius: 8px;
+            display: none;
+        }
+
+        #shortUrl {
+            color: #2563eb;
+            font-weight: bold;
+            word-break: break-all;
+        }
+
+        #error {
+            margin-top: 20px;
+            color: #dc2626;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="logo">
+            Secure<span>Ship</span>
+        </div>
+
+        <p class="subtitle">
+            Simple and secure URL shortening
+        </p>
+
+        <form id="shortenForm">
+
+            <input
+                type="url"
+                id="url"
+                placeholder="Enter your long URL"
+                required
+            >
+
+            <button type="submit" id="shortenButton">
+                Shorten URL
+            </button>
+
+        </form>
+
+        <div id="result">
+            <p>Your shortened URL:</p>
+
+            <br>
+
+            <a
+                id="shortUrl"
+                href="#"
+                target="_blank"
+            ></a>
+        </div>
+
+        <div id="error"></div>
+
+    </div>
+
+
+    <script>
+
+        const form = document.getElementById("shortenForm");
+        const urlInput = document.getElementById("url");
+        const button = document.getElementById("shortenButton");
+
+        const result = document.getElementById("result");
+        const shortUrl = document.getElementById("shortUrl");
+        const error = document.getElementById("error");
+
+
+        form.addEventListener("submit", async function(event) {
+
+            event.preventDefault();
+
+            result.style.display = "none";
+            error.style.display = "none";
+
+            button.disabled = true;
+            button.textContent = "Shortening...";
+
+
+            try {
+
+                const response = await fetch("/shorten", {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        url: urlInput.value
+                    })
+
+                });
+
+
+                const data = await response.json();
+
+
+                if (!response.ok) {
+                    throw new Error(data.error || "Failed to shorten URL");
+                }
+
+
+                const fullShortUrl =
+                    window.location.origin + data.short_url;
+
+
+                shortUrl.href = fullShortUrl;
+                shortUrl.textContent = fullShortUrl;
+
+                result.style.display = "block";
+
+
+            } catch (err) {
+
+                error.textContent = err.message;
+                error.style.display = "block";
+
+            }
+
+
+            button.disabled = false;
+            button.textContent = "Shorten URL";
+
+        });
+
+    </script>
+
+</body>
+</html>
