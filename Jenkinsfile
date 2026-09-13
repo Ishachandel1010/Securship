@@ -72,7 +72,7 @@ pipeline {
             steps {
                 sh '''
                     . .venv/bin/activate
-                    pytest tests/ --junitxml=test-results.xml -v
+                    PYTHONPATH=. pytest tests/ --junitxml=test-results.xml -v
                 '''
             }
             post {
